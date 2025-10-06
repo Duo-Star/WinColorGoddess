@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 #include <ctime>
 #include <windows.h>
@@ -6,7 +6,7 @@
 #include <wchar.h>
 #include <shobjidl.h> // IDesktopWallpaper, IShellItemArray
 #include <objbase.h>  // CoInitializeEx, CoUninitialize
-
+#include <random> // 包含rand()和srand()
 
 // 函数声明
 void Color_TALOOC_Theme(bool darkMode);
@@ -18,6 +18,15 @@ void Color_TALOOC_Wallpaper();
 
 
 const std::wstring Color_TALOOC_NAME = L"WinColorGoddess";
+
+
+
+bool Color_TALOOC_RanBool() {
+    std::random_device rd;  // 获取随机种子
+    std::mt19937 gen(rd()); // 初始化Mersenne Twister生成器
+    std::bernoulli_distribution dist(0.5); // 伯努利分布
+    return dist(gen);
+}
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
@@ -38,7 +47,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         Color_TALOOC_Theme(useDarkTheme);
         Color_TALOOC_Wallpaper();
 
-        // 1 min检查一次
+        // 0.1 min检查一次
         Sleep(1 * 60 * 1000);
     }
 
@@ -61,19 +70,23 @@ void Color_TALOOC_Theme(bool darkMode) {
         RegSetValueEx(hKey, L"ColorPrevalence", 0, REG_DWORD, (const BYTE*)&customValue, sizeof(customValue));
         RegCloseKey(hKey);
     }
+
     //设置DWM-标题栏
+    /*
     value = darkMode ? 1 : 0;
     if (RegOpenKeyEx(HKEY_CURRENT_USER,
         L"Software\\Microsoft\\Windows\\DWM",
         0, KEY_WRITE, &hKey) == ERROR_SUCCESS) {
         RegSetValueEx(hKey, L"ColorPrevalence", 0, REG_DWORD, (const BYTE*)&value, sizeof(value));
         // 设置深色主题时启用彩色标题栏
-        if (darkMode) {
-            DWORD enableColor = 1;
-            RegSetValueEx(hKey, L"EnableWindowColorization", 0, REG_DWORD, (const BYTE*)&enableColor, sizeof(enableColor));
-        }
+        //if (darkMode) {
+            //DWORD enableColor = 1;
+            //RegSetValueEx(hKey, L"EnableWindowColorization", 0, REG_DWORD, (const BYTE*)&enableColor, sizeof(enableColor));
+        //}
         RegCloseKey(hKey);
     }
+    */
+
     //通知系统主题更改
     SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0,(LPARAM)L"ImmersiveColorSet", SMTO_ABORTIFHUNG, 1000, NULL);
 }
@@ -86,6 +99,7 @@ bool Color_TALOOC_Dark() {
         return true;
     }
     return false;
+    //return Color_TALOOC_RanBool();
 }
 
 // 根据时间切换壁纸幻灯片目录
