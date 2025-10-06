@@ -1,22 +1,32 @@
 # 视窗颜色主题女神
-WinColorGoddess
-auto ctrl win theme
+### WinColorGoddess auto ctrl win theme
 
 ## 运行在后台
-<a href="https://github.com/Duo-Star/WinColorGoddess/image.png"><img src="image0.png" height="240px"/></a>
-<a href="https://github.com/Duo-Star/WinColorGoddess/image.png"><img src="image1.png" height="240px"/></a>
+<a href="https://github.com/Duo-Star/WinColorGoddess/blob/main/image0.png"><img src="image0.png" height="240px"/></a>
+<a href="https://github.com/Duo-Star/WinColorGoddess/blob/main/image1.png"><img src="image1.png" height="240px"/></a>
 
 - 静默运行
 - 开机自启
-- 根据时间调整深浅和壁纸组
+- 根据时间调整**主题深浅**和**壁纸组**
+
+#### 关于壁纸组
+如果你喜欢 **Windows壁纸幻灯片放映** 模式
+
+- E:\媒体\壁纸\-day
+
+- E:\媒体\壁纸\-night
+
+文件夹分别存放 **日间** 和 **夜间** 壁纸，WinColorGoddess将根据时间自动选择
 
 ## 开始使用
+
+下载 **Release.7z** 解压到合适位置并运行
 
 
 ## 继续开发
 > [!NOTE]
 > ### 准备工作
-> - 含有c++环境的Visual Studio
+> - 含有 **c++** 环境的 **Visual Studio**
 > - 没有更多了
 
 - #### 1. 创建新项目
@@ -47,9 +57,9 @@ auto ctrl win theme
 > 
 > 点击 ​​"应用"​​ 并关闭
 
-#### 就像这样
-<a href="https://github.com/Duo-Star/WinColorGoddess/image.png"><img src="image2.png" height="240px"/></a>
 
+#### 就像这样
+<a href="https://github.com/Duo-Star/WinColorGoddess/blob/main/image2.png"><img src="image2.png" height="240px"/></a>
 
 
 
