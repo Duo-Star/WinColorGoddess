@@ -1,14 +1,15 @@
-#include <iostream>
-#include <string>
-#include <ctime>
-#include <windows.h>
-#include <shlobj.h>
-#include <wchar.h>
+#include <iostream> // 
+#include <string> // 
+#include <ctime> // 
+#include <windows.h> // 
+#include <shlobj.h> // 
+#include <wchar.h> // 
 #include <shobjidl.h> // IDesktopWallpaper, IShellItemArray
 #include <objbase.h>  // CoInitializeEx, CoUninitialize
 #include <random> // 包含rand()和srand()
 
-// 函数声明
+
+// 声明
 void Color_TALOOC_Theme(bool darkMode);
 bool Color_TALOOC_Dark();
 void AddToStartup();
@@ -20,37 +21,33 @@ void Color_TALOOC_Wallpaper();
 const std::wstring Color_TALOOC_NAME = L"WinColorGoddess";
 
 
-
 bool Color_TALOOC_RanBool() {
-    std::random_device rd;  // 获取随机种子
-    std::mt19937 gen(rd()); // 初始化Mersenne Twister生成器
+    std::random_device rd;  // 种子
+    std::mt19937 gen(rd()); // Mersenne Twister
     std::bernoulli_distribution dist(0.5); // 伯努利分布
     return dist(gen);
 }
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-    // 检查是否已经运行
+    // 是否已经运行
     HANDLE hMutex = CreateMutex(NULL, TRUE, Color_TALOOC_NAME.c_str());
     if (GetLastError() == ERROR_ALREADY_EXISTS) {
         return 0; // 已有实例在运行
     }
-
-    // 确保程序在开机启动项中
+    // 确保开机启动
     if (!IsInStartup()) {
         AddToStartup();
     }
-
     // 主循环
     while (true) {
         bool useDarkTheme = Color_TALOOC_Dark();
         Color_TALOOC_Theme(useDarkTheme);
         Color_TALOOC_Wallpaper();
 
-        // 0.1 min检查一次
+        // 1 min检查一次
         Sleep(1 * 60 * 1000);
     }
-
     ReleaseMutex(hMutex);
     return 0;
 }
@@ -66,11 +63,10 @@ void Color_TALOOC_Theme(bool darkMode) {
         RegSetValueEx(hKey, L"SystemUsesLightTheme", 0, REG_DWORD, (const BYTE*)&value, sizeof(value));
         // 设置应用模式
         RegSetValueEx(hKey, L"AppsUseLightTheme", 0, REG_DWORD, (const BYTE*)&value, sizeof(value));
-        DWORD customValue = 0; // 0=使用统一主题, 1=自定义模式
-        RegSetValueEx(hKey, L"ColorPrevalence", 0, REG_DWORD, (const BYTE*)&customValue, sizeof(customValue));
+        //DWORD customValue = 0; // 0=使用统一主题, 1=自定义模式
+        //RegSetValueEx(hKey, L"ColorPrevalence", 0, REG_DWORD, (const BYTE*)&customValue, sizeof(customValue));
         RegCloseKey(hKey);
     }
-
     //设置DWM-标题栏
     /*
     value = darkMode ? 1 : 0;
@@ -86,10 +82,10 @@ void Color_TALOOC_Theme(bool darkMode) {
         RegCloseKey(hKey);
     }
     */
-
     //通知系统主题更改
     SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0,(LPARAM)L"ImmersiveColorSet", SMTO_ABORTIFHUNG, 1000, NULL);
 }
+
 
 bool Color_TALOOC_Dark() {
     SYSTEMTIME st;
@@ -102,15 +98,16 @@ bool Color_TALOOC_Dark() {
     //return Color_TALOOC_RanBool();
 }
 
+
 // 根据时间切换壁纸幻灯片目录
 void Color_TALOOC_Wallpaper() {
     bool isNight = Color_TALOOC_Dark();
     if (isNight) {
-        // 夜间壁纸目录
+        // 夜间壁纸
         Color_TALOOC_SetWallpaperSlide(L"E:\\媒体\\壁纸\\-night");
     }
     else {
-        // 日间壁纸目录
+        // 日间壁纸
         Color_TALOOC_SetWallpaperSlide(L"E:\\媒体\\壁纸\\-day");
     }
 }
@@ -128,7 +125,7 @@ bool Color_TALOOC_SetWallpaperSlide(const wchar_t* path) {
     IDesktopWallpaper* pDesktopWallpaper = nullptr;
     IShellItem* pShellItem = nullptr;
     IShellItemArray* pShellItemArray = nullptr;
-    //创建 IDesktopWallpaper 对象
+    //创建 IDesktopWallpaper
     hr = CoCreateInstance(CLSID_DesktopWallpaper, NULL, CLSCTX_ALL, IID_PPV_ARGS(&pDesktopWallpaper));
     if (SUCCEEDED(hr)) {
         hr = SHCreateItemFromParsingName(
@@ -145,14 +142,11 @@ bool Color_TALOOC_SetWallpaperSlide(const wchar_t* path) {
     if (SUCCEEDED(hr)) {
         //设置幻灯片目录
         hr = pDesktopWallpaper->SetSlideshow(pShellItemArray);
-        //设置幻灯片选项，如打乱顺序 (DWSPO_SHUFFLE)
-        // hr = pDesktopWallpaper->SetSlideshowOptions(DWSPO_SHUFFLE, 30000); 
     }
-    //清理 COM 对象
+    //清理 COM
     if (pDesktopWallpaper) pDesktopWallpaper->Release();
     if (pShellItem) pShellItem->Release();
     if (pShellItemArray) pShellItemArray->Release();
-    //清理 COM
     CoUninitialize();
     return SUCCEEDED(hr);
 }
@@ -169,6 +163,7 @@ void AddToStartup() {
         RegCloseKey(hKey);
     }
 }
+
 
 // 检查是否在开机启动项中
 bool IsInStartup() {
